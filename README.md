@@ -34,3 +34,9 @@ This Secret Santa application allows users to organize gift exchanges efficientl
 - [ ] Create the frontend
 - [ ] Integrate the API and the frontend
 - [ ] Deploy the application
+
+## Run
+
+```bash
+docker compose up
+```
