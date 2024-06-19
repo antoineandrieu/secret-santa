@@ -10,11 +10,9 @@ class ParticipantSerializer(serializers.ModelSerializer):
 
 
 class BlacklistSerializer(serializers.ModelSerializer):
-    participant = serializers.SlugRelatedField(
-        slug_field="name", queryset=Participant.objects.all()
-    )
-    cannot_receive_from = serializers.SlugRelatedField(
-        slug_field="name", queryset=Participant.objects.all()
+    participant = serializers.PrimaryKeyRelatedField(queryset=Participant.objects.all())
+    cannot_receive_from = serializers.PrimaryKeyRelatedField(
+        queryset=Participant.objects.all()
     )
 
     class Meta:
