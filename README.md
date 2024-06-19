@@ -23,12 +23,12 @@ This Secret Santa application allows users to organize gift exchanges efficientl
 - Vue
 
 ## TODO
-- [ ] Setup dev environment
-- [ ] Design the data model
-- [ ] Design the API
-- [ ] Create the API
+- [x] Setup dev environment
+- [x] Design the data model
+- [x] Design the API
+- [x] Create the API
 - [ ] Write fixtures
-- [ ] Add tests
+- [x] Add tests
 - [ ] Implement the draw feature
 - [ ] Add the history feature
 - [ ] Create the frontend
@@ -39,4 +39,32 @@ This Secret Santa application allows users to organize gift exchanges efficientl
 
 ```bash
 docker compose up
+```
+
+## Test
+
+```bash
+docker compose exec backend python manage.py test
+```
+
+## Usage
+
+### Create a participant
+```bash
+curl -X POST http://localhost:8000/api/participants/ -d '{"name": "John", "email": "john@example.com"}'
+```
+
+### Get all participants
+```bash
+curl -X GET http://localhost:8000/api/participants/
+```
+
+### Create a blacklist
+```bash
+curl -X POST http://localhost:8000/api/blacklists/ -d '{"participant": 1, "cannot_receive_from": 2}'
+```
+
+### Delete a blacklist
+```bash
+curl -X DELETE http://localhost:8000/api/blacklists/1/
 ```
