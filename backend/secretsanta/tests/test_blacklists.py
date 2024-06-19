@@ -20,9 +20,7 @@ class BlacklistAPITests(APITestCase):
             "participant": self.participant1.id,
             "cannot_receive_from": self.participant2.id,
         }
-        print(data)
         response = self.client.post(url, data, format="json")
-        print(response.data)
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(Blacklist.objects.count(), 1)
 
