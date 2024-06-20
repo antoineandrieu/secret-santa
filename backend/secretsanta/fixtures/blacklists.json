@@ -1,0 +1,66 @@
+[
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 1,
+        "fields": {
+            "participant": 1,
+            "cannot_receive_from": 3
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 2,
+        "fields": {
+            "participant": 1,
+            "cannot_receive_from": 4
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 3,
+        "fields": {
+            "participant": 2,
+            "cannot_receive_from": 1
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 4,
+        "fields": {
+            "participant": 2,
+            "cannot_receive_from": 4
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 5,
+        "fields": {
+            "participant": 3,
+            "cannot_receive_from": 1
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 6,
+        "fields": {
+            "participant": 3,
+            "cannot_receive_from": 2
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 7,
+        "fields": {
+            "participant": 4,
+            "cannot_receive_from": 2
+        }
+    },
+    {
+        "model": "secretsanta.blacklist",
+        "pk": 8,
+        "fields": {
+            "participant": 4,
+            "cannot_receive_from": 3
+        }
+    }
+]

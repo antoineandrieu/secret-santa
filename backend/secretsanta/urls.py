@@ -23,7 +23,6 @@ from .views import (
     ParticipantViewSet,
     BlacklistViewSet,
     DrawViewSet,
-    DrawParticipantViewSet,
 )
 
 # Create a router and register our viewsets with it.
@@ -31,7 +30,6 @@ router = DefaultRouter()
 router.register(r"participants", ParticipantViewSet)
 router.register(r"blacklists", BlacklistViewSet)
 router.register(r"draws", DrawViewSet)
-router.register(r"draw_participants", DrawParticipantViewSet)
 
 # The API URLs are now determined automatically by the router.
 urlpatterns = [

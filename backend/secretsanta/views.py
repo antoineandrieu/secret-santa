@@ -1,6 +1,12 @@
+import logging
+
+from django.db import transaction
 from rest_framework import mixins, status, viewsets
-from rest_framework.decorators import action
+from rest_framework.exceptions import ValidationError
 from rest_framework.response import Response
+
+logger = logging.getLogger(__name__)
+
 
 from .models import Participant, Blacklist, Draw, DrawParticipant
 from .serializers import (
@@ -9,6 +15,7 @@ from .serializers import (
     DrawSerializer,
     DrawParticipantSerializer,
 )
+import random
 
 
 class ParticipantViewSet(viewsets.ModelViewSet):
@@ -32,19 +39,61 @@ class DrawViewSet(
     queryset = Draw.objects.all()
     serializer_class = DrawSerializer
 
-    @action(detail=False, methods=["post"])
-    def create_custom_draw(self, request, *args, **kwargs):
+    def create(self, request):
         serializer = self.get_serializer(data=request.data)
         if serializer.is_valid():
             draw = self.perform_create_draw(serializer)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(DrawSerializer(draw).data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+    @transaction.atomic
     def perform_create_draw(self, serializer):
-        # TODO: Implement logic to create a draw with participants and ensure blacklist constraints
-        instance = serializer.save()
-        return instance
+        draw_instance = serializer.save()
+
+        participants = list(Participant.objects.all())
+        random.shuffle(participants)
+
+        # Creating a blacklist map where key is a participant who cannot receive from the values (set of givers)
+        blacklist_map = {}
+        for entry in Blacklist.objects.all():
+            if entry.cannot_receive_from_id not in blacklist_map:
+                blacklist_map[entry.cannot_receive_from_id] = set()
+            blacklist_map[entry.cannot_receive_from_id].add(entry.participant_id)
+
+        logger.error(f"blacklist_map: {blacklist_map}")
+
+        assignments = {}
+        remaining_receivers = set(participants)
+
+        for giver in participants:
+            # Exclude the giver from possible receivers and anyone who has blacklisted this giver
+            possible_receivers = {
+                receiver
+                for receiver in remaining_receivers
+                if receiver.id != giver.id
+                and giver.id not in blacklist_map.get(receiver.id, set())
+            }
+
+            if not possible_receivers:
+                transaction.set_rollback(True)
+                raise ValidationError(
+                    f"No valid receivers for participant {giver.name}"
+                )
+
+            # Select a receiver
+            receiver = random.choice(list(possible_receivers))
+            assignments[giver] = receiver
+            remaining_receivers.remove(receiver)
+
+        draw_participants = [
+            DrawParticipant(draw=draw_instance, giver=giver, receiver=receiver)
+            for giver, receiver in assignments.items()
+        ]
+
+        DrawParticipant.objects.bulk_create(draw_participants)
+
+        return draw_instance
 
 
 class DrawParticipantViewSet(

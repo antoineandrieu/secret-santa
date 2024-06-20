@@ -41,6 +41,18 @@ This Secret Santa application allows users to organize gift exchanges efficientl
 docker compose up
 ```
 
+## Create the database
+
+```bash
+docker compose exec backend python manage.py migrate
+```
+
+## Load test data
+
+```bash
+docker compose exec backend python manage.py loaddata participants blacklists
+```
+
 ## Test
 
 ```bash

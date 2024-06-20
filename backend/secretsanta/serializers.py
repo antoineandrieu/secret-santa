@@ -20,21 +20,18 @@ class BlacklistSerializer(serializers.ModelSerializer):
         fields = ["id", "participant", "cannot_receive_from"]
 
 
-class DrawSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Draw
-        fields = ["id", "date"]
-
-
 class DrawParticipantSerializer(serializers.ModelSerializer):
-    draw = serializers.PrimaryKeyRelatedField(queryset=Draw.objects.all())
-    giver = serializers.SlugRelatedField(
-        slug_field="name", queryset=Participant.objects.all()
-    )
-    receiver = serializers.SlugRelatedField(
-        slug_field="name", queryset=Participant.objects.all()
-    )
+    giver = ParticipantSerializer(read_only=True)
+    receiver = ParticipantSerializer(read_only=True)
 
     class Meta:
         model = DrawParticipant
-        fields = ["id", "draw", "giver", "receiver"]
+        fields = ["id", "giver", "receiver"]
+
+
+class DrawSerializer(serializers.ModelSerializer):
+    participants = DrawParticipantSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Draw
+        fields = ["id", "date", "participants"]
