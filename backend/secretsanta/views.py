@@ -36,8 +36,18 @@ class BlacklistViewSet(
 class DrawViewSet(
     mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
 ):
-    queryset = Draw.objects.all()
+    queryset = Draw.objects.all().order_by("-date")
     serializer_class = DrawSerializer
+
+    def list(self, request, *args, **kwargs):
+        # Return the last 5 draws
+        queryset = self.filter_queryset(self.get_queryset())[:5]
+        page = self.paginate_queryset(queryset)
+        if page is not None:
+            serializer = self.get_serializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
 
     def create(self, request):
         serializer = self.get_serializer(data=request.data)
