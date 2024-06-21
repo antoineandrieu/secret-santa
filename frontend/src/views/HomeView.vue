@@ -1,6 +1,6 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
+    <img alt="Secret Santa logo" src="../assets/secret-santa.webp">
 
     <ParticipantsView @update:selected="handleSelectedParticipants" />
 

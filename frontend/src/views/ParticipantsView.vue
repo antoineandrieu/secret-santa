@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1>Participants</h1>
+        <h2>Participants</h2>
         <ul>
             <li v-for="participant in participants" :key="participant.id">
                 <input type="checkbox" :value="participant" v-model="selectedParticipants"
