@@ -3,6 +3,8 @@
         <h1>Participants</h1>
         <ul>
             <li v-for="participant in participants" :key="participant.id">
+                <input type="checkbox" :value="participant" v-model="selectedParticipants"
+                    @change="updateSelectedParticipants">
                 {{ participant.name }} ({{ participant.email }})
             </li>
         </ul>
@@ -24,7 +26,8 @@ export default {
                 name: '',
                 email: ''
             },
-            participants: []
+            participants: [],
+            selectedParticipants: []
         };
     },
     methods: {
@@ -40,12 +43,15 @@ export default {
             try {
                 const response = await axios.post('http://localhost:8000/api/participants/', this.participant);
                 this.participants.push(response.data);
-                this.participant = { name: '', email: '' };
+                this.participant = { name: '', email: '' };  // Reset form fields
             } catch (error) {
                 alert('Error adding participant');
                 console.error(error);
             }
-        }
+        },
+        updateSelectedParticipants() {
+            this.$emit('update:selected', this.selectedParticipants);
+        },
     },
     created() {
         this.fetchParticipants();

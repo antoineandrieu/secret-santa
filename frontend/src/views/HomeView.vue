@@ -2,9 +2,9 @@
   <div class="home">
     <img alt="Vue logo" src="../assets/logo.png">
 
-    <ParticipantsView />
+    <ParticipantsView @update:selected="handleSelectedParticipants" />
 
-    <DrawFormView />
+    <DrawFormView :selected-participants="selectedParticipants" />
 
     <DrawsView />
   </div>
@@ -21,6 +21,16 @@ export default {
     ParticipantsView,
     DrawFormView,
     DrawsView
+  },
+  data() {
+    return {
+      selectedParticipants: []
+    };
+  },
+  methods: {
+    handleSelectedParticipants(participants) {
+      this.selectedParticipants = participants;
+    }
   }
 }
 </script>
