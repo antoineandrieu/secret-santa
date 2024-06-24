@@ -1,4 +1,4 @@
-c<template>
+<template>
     <div class="draw-container">
         <h2>Create a Draw</h2>
         <div v-if="errorMessage" class="error-message">{{ errorMessage }}</div> <!-- Display error messages -->

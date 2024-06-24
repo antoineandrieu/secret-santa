@@ -31,8 +31,8 @@ This Secret Santa application allows users to organize gift exchanges efficientl
 - [x] Add tests
 - [x] Implement the draw feature
 - [x] Add the history feature
-- [ ] Create the frontend
-- [ ] Integrate the API and the frontend
+- [x] Create the frontend
+- [x] Integrate the API and the frontend
 - [ ] Deploy the application
 
 ## Run
