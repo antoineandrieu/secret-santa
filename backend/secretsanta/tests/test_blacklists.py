@@ -32,3 +32,14 @@ class BlacklistAPITests(APITestCase):
         response = self.client.delete(url)
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
         self.assertEqual(Blacklist.objects.count(), 0)
+
+    def test_get_blacklist(self):
+        Blacklist.objects.create(
+            participant=self.participant1, cannot_receive_from=self.participant2
+        )
+        url = reverse("blacklist-list") + f"?participant={self.participant1.id}"
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(response.data), 1)
+        self.assertEqual(response.data[0]["participant"], self.participant1.id)
+        self.assertEqual(response.data[0]["cannot_receive_from"], self.participant2.id)

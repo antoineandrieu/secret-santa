@@ -32,6 +32,15 @@ class BlacklistViewSet(
     queryset = Blacklist.objects.all()
     serializer_class = BlacklistSerializer
 
+    def list(self, request, *args, **kwargs):
+        participant_id = request.query_params.get("participant", None)
+        if participant_id is not None:
+            blacklists = Blacklist.objects.filter(participant_id=participant_id)
+        else:
+            blacklists = Blacklist.objects.all()
+        serializer = self.get_serializer(blacklists, many=True)
+        return Response(serializer.data)
+
 
 class DrawViewSet(
     mixins.CreateModelMixin, mixins.RetrieveModelMixin, viewsets.GenericViewSet
@@ -70,8 +79,6 @@ class DrawViewSet(
             if entry.cannot_receive_from_id not in blacklist_map:
                 blacklist_map[entry.cannot_receive_from_id] = set()
             blacklist_map[entry.cannot_receive_from_id].add(entry.participant_id)
-
-        logger.error(f"blacklist_map: {blacklist_map}")
 
         assignments = {}
         remaining_receivers = set(participants)
